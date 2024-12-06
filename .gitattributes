@@ -1,0 +1,5 @@
+# Mantieni terminatori di riga LF per tutti i file
+* text eol=lf
+
+# File .cmd (specifici per Windows) con terminatori CRLF
+*.cmd text eol=crlf
