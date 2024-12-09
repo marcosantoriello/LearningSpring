@@ -164,9 +164,6 @@ Se ci sono errori, questi veranno inseriti nell'oggetto `Errors`.
 
 ### Thymeleaf attribute: th:errors
 Thymeleaf offre un modo semplice e conveniente per accedere agli errori nella view: utilizzando `th:errors`.
-Esempio:
-```html
-```
 
 ### Thymeleaf utility objects
 Thymeleaf fornisce degli utility objects a cui si può accedere con `#`. Ad esempio, l'utility object `#fields` fornisce metodi
@@ -208,3 +205,41 @@ devi inserire la seguente riga in `application.properties`:
 spring.thymeleaf.cache=false
 ```
 **Importante**: rimuovere questa riga, oppure settarla a `true`, quando passi in produzione.
+
+## Capitolo 3
+
+### H2 Embedded Database
+Per scopi di sviluppo, utilizziamo l'embedded database H2. Per attivarlo, lo aggiungiamo tra le dipendenze del progetto:
+```xml
+<dependency>
+    <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+Utilizzando gli Spring Boot DevTools, possiamo accedere alla console H2 al seguente indirizzo:
+```
+http://localhost:8080/h2-console
+```
+Siccome il nome del db viene generato automaticamente, può risultare particolarmente comodo cambiare il nome impostando
+le seguenti proprietà nel file `application.properties`.
+```properties
+spring.datasource.generate-unique-name=false
+spring.datasource.name=tacocloud
+```
+
+### @Repository
+Una repository è una componente che si occupa di operazioni CRUD verso una soluzione di storage. Spring Data JPA mira a ridurre
+il boilerplate, dunque la complessità, necessario per l'accesso ai dati.<br>
+`@Repository`: una classe è annotata con `@Repository` per indicare che si occupa di operazioni CRUD. Di solito
+viene utilizzata con implementazioni DAO (Data Access Object) o repository che interagiscono con database,
+cache, ecc.
+
+### @Autowired
+I servizi vengono forniti ai controller tramite dependency injection. La dependency injection in Spring è dichiarata
+tramite l’annotazione @Autowired.
+
+### schema.sql e data.sql
+Se nel classpath è presente un file chiamato `schema.sql`, questo verrà eseguito prima che l'applicazione venga eseguita. Il file va
+posizionato in `src/main/resources/data.sql`. Questo file ci serve per la definizione del db. Possiamo avere, nella stessa posizione, anche 
+un file `data.sql`, anch'esso verrà eseguito prima che l'applicazione parta, per popolare il db.
