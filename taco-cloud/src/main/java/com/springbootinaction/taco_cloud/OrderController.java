@@ -1,5 +1,6 @@
 package com.springbootinaction.taco_cloud;
 
+import com.springbootinaction.taco_cloud.data.JdbcOrderRepository;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
@@ -16,6 +17,12 @@ public class OrderController {
     private static final org.slf4j.Logger log =
             org.slf4j.LoggerFactory.getLogger(OrderController.class);
 
+    private JdbcOrderRepository jdbcOrderRepository;
+
+    public OrderController(JdbcOrderRepository jdbcOrderRepository) {
+        this.jdbcOrderRepository = jdbcOrderRepository;
+    }
+
     @GetMapping("/current")
     public String orderForm() {
         return "orderForm";
@@ -26,6 +33,7 @@ public class OrderController {
         if (errors.hasErrors()) {
             return "orderForm";
         }
+        jdbcOrderRepository.save(order);
         log.info("Order submitted: {}", order);
         sessionStatus.setComplete(); // clearing the session
         return "redirect:/";

@@ -243,3 +243,12 @@ tramite l’annotazione @Autowired.
 Se nel classpath è presente un file chiamato `schema.sql`, questo verrà eseguito prima che l'applicazione venga eseguita. Il file va
 posizionato in `src/main/resources/data.sql`. Questo file ci serve per la definizione del db. Possiamo avere, nella stessa posizione, anche 
 un file `data.sql`, anch'esso verrà eseguito prima che l'applicazione parta, per popolare il db.
+
+### Spring Data JDBC
+Per aggiungerla come dipendenza:
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jdbc</artifactId>
+</dependency>
+```
