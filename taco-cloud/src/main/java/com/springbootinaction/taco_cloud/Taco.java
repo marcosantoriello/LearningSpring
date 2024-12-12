@@ -1,18 +1,18 @@
 package com.springbootinaction.taco_cloud;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
 public class Taco {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Date createdAt = new Date();
@@ -23,5 +23,6 @@ public class Taco {
 
     @NotNull
     @Size(min = 1, message = "You must choose at the least 1 ingredient")
+    @ManyToMany
     private List<IngredientRef> ingredients;
 }

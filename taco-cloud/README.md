@@ -1,5 +1,30 @@
 # Appunti Rapidi
-
+<!-- TOC -->
+* [Appunti Rapidi](#appunti-rapidi)
+  * [Capitolo 2](#capitolo-2)
+  * [@Controller](#controller)
+    * [@RequestMapping](#requestmapping)
+    * [Model Object](#model-object)
+    * [Filtro (Stream API)](#filtro-stream-api)
+    * [Nota sul codice DesignTacoController.java](#nota-sul-codice-designtacocontrollerjava)
+    * [Nota sul passaggio degli attributi da Model a View](#nota-sul-passaggio-degli-attributi-da-model-a-view)
+    * [Thymeleaf attribute: th:field](#thymeleaf-attribute-thfield)
+  * [Lombok](#lombok)
+    * [@Valid](#valid)
+    * [Thymeleaf attribute: th:errors](#thymeleaf-attribute-therrors)
+    * [Thymeleaf utility objects](#thymeleaf-utility-objects)
+    * [Impelementazione alternativa di `HomeController`](#impelementazione-alternativa-di-homecontroller)
+    * [Disattivare view caching in development](#disattivare-view-caching-in-development)
+  * [Capitolo 3](#capitolo-3)
+    * [H2 Embedded Database](#h2-embedded-database)
+    * [@Repository](#repository)
+    * [@Autowired](#autowired)
+    * [schema.sql e data.sql](#schemasql-e-datasql)
+    * [Spring Data JDBC](#spring-data-jdbc)
+  * [JPA](#jpa)
+    * [Ingredient Entity](#ingredient-entity)
+    * [OrderRepository](#orderrepository)
+<!-- TOC -->
 ## Capitolo 2
 
 ## @Controller
@@ -251,4 +276,80 @@ Per aggiungerla come dipendenza:
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jdbc</artifactId>
 </dependency>
+```
+
+## JPA
+Per aggiungere JPA come dipendenza:
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```
+
+### Ingredient Entity
+JPA richiede che una Entity abbia un costrutture senza argomenti di default, dunque, con Lombok, utilizzo l'annotazione
+`@NoArgsContstructor`. Tuttavia, voglio che per questa classe venga utilizzato sempre il costruttore con gli argomenti,
+per cui imposto il costruttore senza argomenti come `private`:
+```java
+@NoArgsConstructor(access=AccessLevel.PRIVATE)
+```
+Inoltre, poiché nella classe Ingredient vi sono dei campi dichiarati come `final` che devono essere settati,
+faccio in modo che Lombok li inizalizzi al loro valore di default, settando `force=true`:
+```java
+@NoArgsConstructor(access=AccessLevel.PRIVATE, force=true)
+```
+Ho bisogno anche di un `@RequiredArgsConstructor`, ovvero un costruttore che prende un parametro per ogni campo `final`, dunque
+che richiede inizializzazione e per i valori annotati con `@NonNull` che non sono stati inizializzati dove sono stati dichiarati.
+Di default, quanto utilizziamo `@Data`, questa annotazione è **implicita**, dunque è presente anche se non la utilizziamo. Tuttavia,
+quando utilizziamo `@NoArgsConstructor` viene rimossa, dunque dobbiamo aggiungerla esplicitamente.
+
+### OrderRepository
+Spring Data riesce a determinare il tipo di query da effettuare in base alla firma del metodo e dal contesto. Ad esempio,
+in `OrderRepository`, supponiamo che io necessiti di un metodo per trovare tutti gli ordini effettuati a un determinato Zip Code,
+in uno specifico intervallo di tempo. Posso dichiarare il metodo come segue nella repository:
+```java
+List<TacoOrder> readOrdersByDeliveryZipAndPlacedAtBetween(String deliveryZip, Date startDate, Date endDate);
+```
+Innanzitutto, Spring Data leggerà il verbo `read` come prima cosa e capirà che la query da effettuare deve fetchare qualcosa dal db.
+Al posto di `read` avrei potuto mettere anche `get` oppure `find`. `By` segna l'inizio delle proprietà da matchare: in particolare
+deve matchare `.deliveryZip` con il l'argomento passato al metodo (oppure `.delivery.zip`). L'`And` viene interpretato, banalmente, come un And.
+Infine, `Between` specifica che dopo l'And vi è un intervallo in cui devono cadere i corrispondenti valori.
+Il soggetto del metodo, in questo caso `Orders` è opzionale, dunque può essere omesso. Potrei anche inserire `OrderBy` alla fine.
+Di seguito riportata una lista degli operatori utilizzabili nella firma del metodo:
+- IsAfter, After, IsGreaterThan, GreaterThan
+- IsGreaterThanEqual, GreaterThanEqual
+- IsBefore, Before, IsLessThan, LessThan
+- IsLessThanEqual, LessThanEqual
+- IsBetween, Between
+- IsNull, Null
+- IsNotNull, NotNull
+- IsIn, In
+- IsNotIn, NotIn
+- IsStartingWith, StartingWith, StartsWith
+- IsEndingWith, EndingWith, EndsWith
+- IsContaining, Containing, Contains
+- IsLike, Like
+- IsNotLike, NotLike
+- IsTrue, True
+- IsFalse, False
+- Is, Equals
+- IsNot, Not
+- IgnoringCase, IgnoresCase
+### @Query
+Se le naming conventions non dovessero bastare, potrei sempre definire una query customizzata come segue:
+```java
+@Query("Order o where o.deliveryCity='Seattle'")
+List<TacoOrder> readOrdersDeliveredInSeattle();
+```
+Il linguaggio utilizzato per la definizione delle query può essere sia JPQL che SQL.
+Esempi:
+```java
+// JPQL
+@Query("SELECT p FROM Product p WHERE p.price > :price")
+List<Product> findExpensiveProducts(@Param("price") Double price);
+
+//SQL
+@Query(value = "SELECT * FROM product WHERE price > :price", nativeQuery = true)
+List<Product> findExpensiveProductsNative(@Param("price") Double price);
 ```
