@@ -1,6 +1,5 @@
 package com.springbootinaction.taco_cloud.data;
 
-import com.springbootinaction.taco_cloud.Ingredient;
 import com.springbootinaction.taco_cloud.IngredientRef;
 import com.springbootinaction.taco_cloud.Taco;
 import com.springbootinaction.taco_cloud.TacoOrder;
