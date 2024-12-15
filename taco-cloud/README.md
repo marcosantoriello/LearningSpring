@@ -1,29 +1,30 @@
 # Appunti Rapidi
 <!-- TOC -->
-* [Appunti Rapidi](#appunti-rapidi)
-  * [Capitolo 2](#capitolo-2)
-  * [@Controller](#controller)
-    * [@RequestMapping](#requestmapping)
-    * [Model Object](#model-object)
-    * [Filtro (Stream API)](#filtro-stream-api)
-    * [Nota sul codice DesignTacoController.java](#nota-sul-codice-designtacocontrollerjava)
-    * [Nota sul passaggio degli attributi da Model a View](#nota-sul-passaggio-degli-attributi-da-model-a-view)
-    * [Thymeleaf attribute: th:field](#thymeleaf-attribute-thfield)
-  * [Lombok](#lombok)
-    * [@Valid](#valid)
-    * [Thymeleaf attribute: th:errors](#thymeleaf-attribute-therrors)
-    * [Thymeleaf utility objects](#thymeleaf-utility-objects)
-    * [Impelementazione alternativa di `HomeController`](#impelementazione-alternativa-di-homecontroller)
-    * [Disattivare view caching in development](#disattivare-view-caching-in-development)
-  * [Capitolo 3](#capitolo-3)
-    * [H2 Embedded Database](#h2-embedded-database)
-    * [@Repository](#repository)
-    * [@Autowired](#autowired)
-    * [schema.sql e data.sql](#schemasql-e-datasql)
-    * [Spring Data JDBC](#spring-data-jdbc)
-  * [JPA](#jpa)
-    * [Ingredient Entity](#ingredient-entity)
-    * [OrderRepository](#orderrepository)
+- [Appunti Rapidi](#appunti-rapidi)
+  - [Capitolo 2](#capitolo-2)
+  - [@Controller](#controller)
+    - [@RequestMapping](#requestmapping)
+    - [Model Object](#model-object)
+    - [Filtro (Stream API)](#filtro-stream-api)
+    - [Nota sul codice DesignTacoController.java](#nota-sul-codice-designtacocontrollerjava)
+    - [Nota sul passaggio degli attributi da Model a View](#nota-sul-passaggio-degli-attributi-da-model-a-view)
+    - [Thymeleaf attribute: th:field](#thymeleaf-attribute-thfield)
+  - [Lombok](#lombok)
+    - [@Valid](#valid)
+    - [Thymeleaf attribute: th:errors](#thymeleaf-attribute-therrors)
+    - [Thymeleaf utility objects](#thymeleaf-utility-objects)
+    - [Impelementazione alternativa di `HomeController`](#impelementazione-alternativa-di-homecontroller)
+    - [Disattivare view caching in development](#disattivare-view-caching-in-development)
+  - [Capitolo 3](#capitolo-3)
+    - [H2 Embedded Database](#h2-embedded-database)
+    - [@Repository](#repository)
+    - [@Autowired](#autowired)
+    - [schema.sql e data.sql](#schemasql-e-datasql)
+    - [Spring Data JDBC](#spring-data-jdbc)
+  - [JPA](#jpa)
+    - [Ingredient Entity](#ingredient-entity)
+    - [OrderRepository](#orderrepository)
+    - [@Query](#query)
 <!-- TOC -->
 ## Capitolo 2
 
@@ -268,6 +269,12 @@ tramite l’annotazione @Autowired.
 Se nel classpath è presente un file chiamato `schema.sql`, questo verrà eseguito prima che l'applicazione venga eseguita. Il file va
 posizionato in `src/main/resources/data.sql`. Questo file ci serve per la definizione del db. Possiamo avere, nella stessa posizione, anche 
 un file `data.sql`, anch'esso verrà eseguito prima che l'applicazione parta, per popolare il db.
+È tuttavia meglio (mi è capitato proprio di non riuscire a vedere i dati di popolamento) aggiungere la seguente riga in `application.properties`:
+```properties
+spring.jpa.defer-datasource-initialization=true
+```
+In questo modo mi assicuro che l'inizializzazione del db (esecuzione di `schema.sql`) avvenga prima del popolamento (`data.sql`).
+
 
 ### Spring Data JDBC
 Per aggiungerla come dipendenza:

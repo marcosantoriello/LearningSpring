@@ -35,6 +35,7 @@ public class BookController {
         } else if (isbn != null && !isbn.isEmpty()) {
             books = bookService.getBookByISBN(isbn);
         } else if (author != null && !author.isEmpty()) {
+            log.info("Author {}", author);
             books = bookService.getBookByAuthor(author);
         } else {
             books = bookService.getAllBooks();

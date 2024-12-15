@@ -30,15 +30,9 @@ public class BookService {
 
     public List<Book> getAllBooks() { return bookRepository.findAll(); }
 
-    public List<Book> getBookByTitle(String title) {
-        List<Book> books = bookRepository.findByTitle(title);
-        log.info("Found {}", books.getFirst().getTitle());
-        return bookRepository.findByTitle(title);
-    }
+    public List<Book> getBookByTitle(String title) { return bookRepository.findByTitle(title); }
 
-    public List<Book> getBookByAuthor(String author) {
-        return bookRepository.findByAuthor(author);
-    }
+    public List<Book> getBookByAuthor(String author)  { return bookRepository.findByAuthor(author); }
 
     public List<Book> getBookByISBN(String isbn) {
         return bookRepository.findByIsbn(isbn);
