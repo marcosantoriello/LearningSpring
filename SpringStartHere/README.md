@@ -72,4 +72,12 @@ public class Person {
 Generalmente, `@Autowired` viene usato sul costruttore.
 
 
+# Capitolo 4
+Ricorda che non ha senso aggiungere annotazioni stereotype su interfacce o classi astratte poiché
+esse non possono essere istanziate.
+
+## Separazione delle responsabilità con le annotazioni
+L'annotazione `@Component` è generica e non fornisce alcun dettaglio circa le responsabilità dell'oggetto che stai implementando.
+Vi sono poi le annotazioni `@Service` e `@Repository`: i servizi sono gli oggetti responsabili dell'implementazione dei casi d'uso. Gli oggetti repository, invece, sono quelli responsabili della gestione della persistenza.
+
 
