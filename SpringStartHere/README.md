@@ -81,3 +81,20 @@ L'annotazione `@Component` è generica e non fornisce alcun dettaglio circa le r
 Vi sono poi le annotazioni `@Service` e `@Repository`: i servizi sono gli oggetti responsabili dell'implementazione dei casi d'uso. Gli oggetti repository, invece, sono quelli responsabili della gestione della persistenza.
 
 
+# Capitolo 5
+Spring utilizza vari approcci per la creazione dei beans e tali approcci sono chiamati *scopes*. In particolare, in questo capitolo vedremo
+lo scope **Singleton** e lo scope **Prototype**.
+
+## Singleton
+Singleton è lo scope di default, nonché quello più utilizzato, di Spring per la gestione dei beans nel suo contesto. Tuttavia, non bisogna
+confondere questo concetto con il design pattern Singleton. Infatti, il design pattern Singleton prevede che vi sia una sola istanza di una classe
+in tutta l'applicazione, mentre il concetto di Singleton in Spring, riguarda l'unicità del nome, ovvero una classe può avere più istanze, purché
+esse abbiano nomi differenti. Nota, inoltre, che i Singleton beans non sono progettati per essere sincronizzati e, sebbene sia possibile la sincronizzazione
+manuale, non è una good practice.
+Uno dei vantaggi della constructor injection è che mi permette di dichiarare il campo del bean (quello da iniettare) immutabile, ovvero *final*.
+
+## Prototype
+L'idea dei prototype beans è molto semplice: ogni qualvolta richiedi un riferimento ad un bean prototype-scoped, Spring crea una nuova istanza
+dell'oggetto. In questo caso, dunque, il framework gestisce il tipo dell'oggetto e crea una nuova istanza ogni volta che qualcuno richiede un riferimento
+a tale bean. Per cambiare lo scope a prototype: `@Scope(BeanDefinition.SCOPE_PROTOTYPE)`.
+
