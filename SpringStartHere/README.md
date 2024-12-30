@@ -98,3 +98,31 @@ L'idea dei prototype beans è molto semplice: ogni qualvolta richiedi un riferim
 dell'oggetto. In questo caso, dunque, il framework gestisce il tipo dell'oggetto e crea una nuova istanza ogni volta che qualcuno richiede un riferimento
 a tale bean. Per cambiare lo scope a prototype: `@Scope(BeanDefinition.SCOPE_PROTOTYPE)`.
 
+## Capitolo 6 - Using aspects with Spring AOP
+Gli aspects rappresentano un modo in cui il framework intercetta le chiamate a metodi ed eventualmente altera l'esecuzione degli stessi.
+Questo approccio è chiamato *aspect-oriented programming* (AOP). Uno dei vantaggi degli aspects, ad esempio, è il miglioramento della comprensione
+del codice poiché si possono separare parti di un codice dalla logica di business (ad es. il libro separa tutta la parte del logging).
+
+Dunque, un aspect è semplicemente un pezzo di logica che il framework esegue quando chiami uno specifico metodo di tua scelta.<br>
+Terminologia:
+- **aspect**: *quale* codice vuoi che Spring esegua quando invochi uno specifico metodo;
+- **advice**: quando l'applicazione dovrebbe eseguire la logica dell'aspect;
+- **pointcut**: quali metodi il framework deve intercettare per eseguire la logica degli aspects.
+- **joint point**: evento che triggera l'esecuzione di un aspect (in Spring è sempre una chiamata a metodo);
+- **target object**: il bean che dichiara il metodo intercettato da un aspect.
+
+Quando rendi un bean il target di un aspect, Spring non ti restituirà direttamente un'istanza del bean, ma ti darà un proxy object che invoca
+la logica dell'aspect invece del metodo effettivo del bean. Questo approccio è chiamato **weaving**. L'oggetto proxy innanzitutto esegue la logica
+dell'aspect, successivamente delega la chiamata del metodo reale alla classe effettiva che lo implementa.
+
+Per creare un aspect:
+- abilitare il meccanismo degli aspects annotando la classe di configurazione con `@EnableAspectJAutoProxy`.
+- Creare una nuova classe e annotarla con l'annotazione `@Aspect` (tale classe deve essere aggiunta allo Spring
+  context, dunque usando @Bean oppure le annotazioni stereotype).
+- Definire un metodo che implementerà la logica dell'aspect e dirà a Spring quando e quali metodi intercettare utilizzando
+    l'annotazione advice.
+- Implementare la logica dell'aspect.
+
+Nota che `@Aspect` non è uno stereotype, dunque Spring non lo vedrà come bean. Per farlo, va dichiarato esplicitamente come bean utilizzando le tecniche note viste in precedenza.
+
+![AspectJ pointcut language](imgs/AspectJPointcutLanguage.png)
