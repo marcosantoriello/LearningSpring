@@ -1,5 +1,23 @@
 # Appunti del libro Spring Start Here
 
+# ToC
+- [Appunti del libro Spring Start Here](#appunti-del-libro-spring-start-here)
+- [ToC](#toc)
+- [Capitolo 2](#capitolo-2)
+  - [Configuration Class](#configuration-class)
+  - [@Configuration](#configuration)
+- [Capitolo 3](#capitolo-3)
+  - [Wiring e Autowiring](#wiring-e-autowiring)
+    - [Autowired](#autowired)
+- [Capitolo 4](#capitolo-4)
+  - [Separazione delle responsabilità con le annotazioni](#separazione-delle-responsabilità-con-le-annotazioni)
+- [Capitolo 5](#capitolo-5)
+  - [Singleton](#singleton)
+  - [Prototype](#prototype)
+  - [Capitolo 6 - Using aspects with Spring AOP](#capitolo-6---using-aspects-with-spring-aop)
+  - [Controller](#controller)
+
+
 # Capitolo 2
 - Il `groupId` di Maven permette di raggruppare più progetti correlati.
 
@@ -126,3 +144,29 @@ Per creare un aspect:
 Nota che `@Aspect` non è uno stereotype, dunque Spring non lo vedrà come bean. Per farlo, va dichiarato esplicitamente come bean utilizzando le tecniche note viste in precedenza.
 
 ![AspectJ pointcut language](imgs/AspectJPointcutLanguage.png)
+
+# Capitolo 7
+- Ricorda che una servlet non è altro che un oggetto Java che interagisce direttamente con il servlet container:
+quando il servlet container riceve una richiesta HTTP ad uno specifico path, invoca il metodo corrispondente (es. HttpGet) sull'oggetto servlet registrato a tale path.
+- Spring web app definisce un oggetto servlet, che rappresenta l'entry point verso la logica applicativa della nostra web app.
+- Spring Boot parent node: situato nel pom.xml, essenzialmente fornisce le versioni compatibili delle dipendenze aggiunte al progetto.
+- Dependency starters: con i dependency starters (es. spring-boot-starter-web) non richiediamo le dipendenze direttamente, ma richiediamo **capacità**,
+    lasciando a Spring Boot il compito di aggiungere le dipendenze giuste.
+
+## Convention-over-configuration principle
+Spring Boot fornisce autoconfigurazioni per le applicazioni. Infatti, diciamo che si basa sul principio della *convention-over-configuration*. 
+Per fare un esempio, Spring sa che, avendo aggiunto la dipendenza web, hai bisogno di un servlet container, per cui configura un'istanza di Tomcat siccome Tomcat è la *convenzione* per i servlet container.
+In questo modo, Spring Boot ti consente di scrivere meno codice di configurazione.
+
+## Controller
+Un controller è una componente della web app che contiene metodi che vengono eseguiti in risposta ad una specifica richiesta HTTP.
+
+Di seguito è riportato il flusso relativo a ciò che accade dietro una web app con Spring Boot quando viene ricevuta una richiesta HTTP:
+1. Il client effettua una richiesta HTTP
+2. Tomcat riceve la richiesta HTTP del client e invoca una componente servlet per la richiesta HTTP. Nel caso di Spring MVC, Tomcat chiama la servlet che Spring Boot
+    ha configurato, chiamata **dispatcher servlet**.
+3. La dispatcher servlet rappresenta l'entry point dell'applicazione. Tomcat passa tutte le richieste HTTP a questa servlet, che si occupa di gestirle all’interno dell’app. Deve trovare quale parte del codice (un controller) deve gestire la richiesta e preparare la risposta da inviare al client. Questo ruolo le dà il nome di **front controller**.
+4. La dispatcher servlet deve capire quale azione (metodo) di un controller deve essere chiamata per gestire quella specifica richiesta. Per fare questo, delega il compito a un componente chiamato handler mapping. Questo componente trova il metodo giusto nel controller grazie all’annotazione @RequestMapping usata nel codice.
+5. Una volta trovato il metodo corretto del controller, la dispatcher servlet lo chiama. Se l’handler mapping non riesce a trovare un metodo corrispondente, l’app risponde con un errore HTTP 404 (“Pagina non trovata”). Quando il metodo del controller termina, restituisce il nome della pagina (HTML) che deve essere mostrata come risposta.
+6. A questo punto, la dispatcher servlet deve trovare il contenuto della vista (la pagina HTML) indicata dal controller. Per farlo, si affida a un componente chiamato View Resolver, che recupera il contenuto della vista.
+7. Infine, la dispatcher servlet invia la vista (pagina HTML) elaborata come risposta al client tramite HTTP.
