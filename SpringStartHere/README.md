@@ -16,6 +16,7 @@
   - [Prototype](#prototype)
   - [Capitolo 6 - Using aspects with Spring AOP](#capitolo-6---using-aspects-with-spring-aop)
   - [Controller](#controller)
+- [Capitolo 8](#capitolo-8)
 
 
 # Capitolo 2
@@ -170,3 +171,10 @@ Di seguito è riportato il flusso relativo a ciò che accade dietro una web app 
 5. Una volta trovato il metodo corretto del controller, la dispatcher servlet lo chiama. Se l’handler mapping non riesce a trovare un metodo corrispondente, l’app risponde con un errore HTTP 404 (“Pagina non trovata”). Quando il metodo del controller termina, restituisce il nome della pagina (HTML) che deve essere mostrata come risposta.
 6. A questo punto, la dispatcher servlet deve trovare il contenuto della vista (la pagina HTML) indicata dal controller. Per farlo, si affida a un componente chiamato View Resolver, che recupera il contenuto della vista.
 7. Infine, la dispatcher servlet invia la vista (pagina HTML) elaborata come risposta al client tramite HTTP.
+
+# Capitolo 8
+- Per mappare un'azione ad un path specifico utilizziamo l'annotazione `@RequestMapping`.
+- Per includere Thymeleaf in file html: `xmlns:th="http://www.thymeleaf.org"`
+- Per accedere ad un attributo inviato adl controller alla view: `${attribute_key}`
+- Il tipo `Model` incapsula i dati che vogliamo che il controller invii alla view.
+- `@RequestParam` dice a Spring di prendere il parametro della richiesta HTTP con lo stesso nome del parametro del metodo.
